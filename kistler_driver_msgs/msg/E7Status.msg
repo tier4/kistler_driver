@@ -1,0 +1,3 @@
+float32 ang_vel_x_body
+float32 ang_vel_y_body
+float32 ang_vel_z_body
