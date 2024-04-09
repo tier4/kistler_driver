@@ -17,6 +17,18 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   msg/E9Status.msg
   msg/EAStatus.msg
   msg/EBStatus.msg
+  msg/data/Stst.msg
+  msg/data/FilterOffOn.msg
+  msg/data/LampCurrentControl.msg
+  msg/data/TemperatureOK.msg
+  msg/data/HeadStatus.msg
+  msg/data/AngleSwitchedOff.msg
+  msg/data/Satfixed.msg
+  msg/data/AngVelCorrection.msg
+  msg/data/DirectionMotion.msg
+  msg/data/DirectionMounting.msg
+  msg/data/DirectionHeadIsValid.msg
+  msg/data/DirectionHead.msg
   DEPENDENCIES
     builtin_interfaces
     std_msgs
