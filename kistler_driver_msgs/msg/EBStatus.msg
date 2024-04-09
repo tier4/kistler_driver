@@ -1,3 +1,5 @@
+builtin_interfaces/Time stamp
+
 uint16 sensor_id
 int8 temperature
 float32 lamp_current
