@@ -59,31 +59,76 @@ void KistlerDriver::onCan(Frame::ConstSharedPtr msg)
     pub_e1_status_->publish(e1_status_msg);
   } else if (msg->id == 0x07E2)
   {
-    /* code */
+    auto e2_status_msg = E2Status();
+    e2_status_msg.pitch = (static_cast<int8_t>((msg->data.at(1) << 8) + msg->data.at(0))) * 0.01;
+    e2_status_msg.roll = (static_cast<int8_t>((msg->data.at(3) << 8) + msg->data.at(2))) * 0.01;
+    e2_status_msg.timestamp = (static_cast<uint16_t>((msg->data.at(5) << 8) + msg->data.at(4)));
+    e2_status_msg.radius = (static_cast<float_t>((msg->data.at(7) << 8) + msg->data.at(6))) * 0.01;
+
+    pub_e2_status_->publish(e2_status_msg);
   } else if (msg->id == 0x07E3)
   {
-    /* code */
+    auto e3_status_msg = E3Status();
+    e3_status_msg.acc_x_hor = (static_cast<int16_t>((msg->data.at(1) << 8) + msg->data.at(0))) * 0.01;
+    e3_status_msg.acc_y_hor = (static_cast<int16_t>((msg->data.at(3) << 8) + msg->data.at(2))) * 0.01;
+    e3_status_msg.acc_z_hor = (static_cast<int16_t>((msg->data.at(5) << 8) + msg->data.at(4))) * 0.01;
+    e3_status_msg.acc_c_body = (static_cast<int16_t>((msg->data.at(7) << 8) + msg->data.at(6))) * 0.01;
+
+    pub_e3_status_->publish(e3_status_msg);
   } else if (msg->id == 0x07E4)
   {
-    /* code */
+    auto e4_status_msg = E4Status();
+    e4_status_msg.ang_vel_x_hor = (static_cast<int16_t>((msg->data.at(1) << 8) + msg->data.at(0))) * 0.02;
+    e4_status_msg.ang_vel_y_hor = (static_cast<int16_t>((msg->data.at(3) << 8) + msg->data.at(2))) * 0.02;
+    e4_status_msg.ang_vel_z_hor = (static_cast<int16_t>((msg->data.at(5) << 8) + msg->data.at(4))) * 0.02;
+
+    pub_e4_status_->publish(e4_status_msg);
   } else if (msg->id == 0x07E5)
   {
-    /* code */
+    auto e5_status_msg = E5Status();
+    e5_status_msg.vel_x_cor = (static_cast<int16_t>((msg->data.at(1) << 8) + msg->data.at(0))) * 0.036;
+    e5_status_msg.vel_y_cor = (static_cast<int16_t>((msg->data.at(3) << 8) + msg->data.at(2))) * 0.036;
+    e5_status_msg.vel_cor = (static_cast<int16_t>((msg->data.at(5) << 8) + msg->data.at(4))) * 0.036;
+    e5_status_msg.angle_cor = (static_cast<int8_t>((msg->data.at(7) << 8) + msg->data.at(6))) * 0.01;
+
+    pub_e5_status_->publish(e5_status_msg);
   } else if (msg->id == 0x07E6)
   {
-    /* code */
+    auto e6_status_msg = E6Status();
+    e6_status_msg.acc_x_body = (static_cast<int16_t>((msg->data.at(1) << 8) + msg->data.at(0))) * 0.01;
+    e6_status_msg.acc_y_body = (static_cast<int16_t>((msg->data.at(3) << 8) + msg->data.at(2))) * 0.01;
+    e6_status_msg.acc_z_body = (static_cast<int16_t>((msg->data.at(5) << 8) + msg->data.at(4))) * 0.01;
+
+    pub_e6_status_->publish(e6_status_msg);
   } else if (msg->id == 0x07E7)
   {
-    /* code */
+    auto e7_status_msg = E7Status();
+    e7_status_msg.ang_vel_x_body = (static_cast<int16_t>((msg->data.at(1) << 8) + msg->data.at(0))) * 0.02;
+    e7_status_msg.ang_vel_y_body = (static_cast<int16_t>((msg->data.at(3) << 8) + msg->data.at(2))) * 0.02;
+    e7_status_msg.ang_vel_z_body = (static_cast<int16_t>((msg->data.at(5) << 8) + msg->data.at(4))) * 0.02;
+
+    pub_e7_status_->publish(e7_status_msg);
   } else if (msg->id == 0x07E8)
   {
-    /* code */
+    auto e8_status_msg = E8Status();
+    e8_status_msg.latitude = (static_cast<int8_t>((msg->data.at(3) << 8 + msg->data.at(2) << 8 + msg->data.at(1) << 8 + msg->data.at(0)))) * 1e7;
+    e8_status_msg.longitude = (static_cast<int16_t>((msg->data.at(7) << 8 + msg->data.at(6) << 8 + msg->data.at(5) << 8 + msg->data.at(4)))) * 1e7;
+
+    pub_e8_status_->publish(e8_status_msg);
   } else if (msg->id == 0x07E9)
   {
-    /* code */
+    auto e9_status_msg = E9Status();
+    e9_status_msg.time_of_week = (static_cast<uint32_t>((msg->data.at(3) << 8 + msg->data.at(2) << 8 + msg->data.at(1) << 8 + msg->data.at(0))));
+    e9_status_msg.track = (static_cast<uint16_t>((msg->data.at(5) << 8) + msg->data.at(4))) * 0.01;
+    e9_status_msg.height = (static_cast<int16_t>((msg->data.at(7) << 8) + msg->data.at(6)));
   } else if (msg->id == 0x07EA)
   {
-    /* code */
+    auto ea_status_msg = EAStatus();
+    ea_status_msg.input_analog_1 = (static_cast<int8_t>((msg->data.at(1) << 8) + msg->data.at(0))) * 0.001;
+    ea_status_msg.input_analog_2 = (static_cast<int8_t>((msg->data.at(3) << 8) + msg->data.at(2))) * 0.001;
+    ea_status_msg.input_digital = (static_cast<int16_t>((msg->data.at(7) << 8 + msg->data.at(6) << 8 + msg->data.at(5) << 8 + msg->data.at(4))));
+
+    pub_ea_status_->publish(ea_status_msg);
   } else if (msg->id == 0x07EB)
   {
     /* code */
