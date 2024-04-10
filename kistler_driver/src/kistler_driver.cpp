@@ -131,6 +131,8 @@ void KistlerDriver::onCan(Frame::ConstSharedPtr msg)
     e9_status_msg.time_of_week = (static_cast<uint32_t>((msg->data.at(3) << 8 + msg->data.at(2) << 8 + msg->data.at(1) << 8 + msg->data.at(0))));
     e9_status_msg.track = (static_cast<uint16_t>((msg->data.at(5) << 8) + msg->data.at(4))) * 0.01;
     e9_status_msg.height = (static_cast<int16_t>((msg->data.at(7) << 8) + msg->data.at(6)));
+
+    pub_e9_status_->publish(e9_status_msg);
   } else if (msg->id == 0x07EA)
   {
     auto ea_status_msg = EAStatus();
@@ -162,6 +164,8 @@ void KistlerDriver::onCan(Frame::ConstSharedPtr msg)
     eb_status_msg.direction_mounting.data = static_cast<uint8_t>(msg->data.at(7) >> 2) & 0x1;
     eb_status_msg.direction_head_is_valid.data = static_cast<uint8_t>(msg->data.at(7) >> 3) & 0x1;
     eb_status_msg.direction_head.data = static_cast<uint8_t>(msg->data.at(7) >> 4) & 0x1;
+
+    pub_eb_status_->publish(eb_status_msg);
   } else
   {
     RCLCPP_WARN_THROTTLE(

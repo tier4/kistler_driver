@@ -1,16 +1,14 @@
 <launch>
   <arg name="can_device" default="can0"/>
-  <group>
-    <push-ros-namespace namespace="can0"/>
-    <include file="$(find-pkg-share ros2_socketcan)/launch/socket_can_bridge.launch.xml">
-      <arg name="interface" value="$(var can_device)"/>
-      <arg name="receiver_interval_sec" value="1.0"/>
-      <arg name="sender_timeout_sec" value="0.02"/>
-    </include>
-  </group>
+
+  <include file="$(find-pkg-share ros2_socketcan)/launch/socket_can_bridge.launch.xml">
+    <arg name="interface" value="$(var can_device)"/>
+    <arg name="receiver_interval_sec" value="1.0"/>
+    <arg name="sender_timeout_sec" value="0.02"/>
+  </include>
 
   <node pkg="kistler_driver" name="kistler_driver" exec="kistler_driver" output="screen">
-    <remap from="input/from_can_bus" to="can0/from_can_bus"/>
+    <remap from="input/from_can_bus" to="from_can_bus"/>
     <remap from="output/e0_status" to="kistler/e0_status"/>
     <remap from="output/e1_status" to="kistler/e1_status"/>
     <remap from="output/e2_status" to="kistler/e2_status"/>

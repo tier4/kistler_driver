@@ -60,10 +60,7 @@ public:
 private:
   // Subscriber
   rclcpp::Subscription<Frame>::SharedPtr sub_can_;
-
   void onCan(Frame::ConstSharedPtr msg);
-
-  Frame initializeCanMsg() const;
 
   // Publisher
   rclcpp::Publisher<E0Status>::SharedPtr pub_e0_status_;
