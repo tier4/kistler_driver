@@ -174,3 +174,6 @@ void KistlerDriver::onCan(Frame::ConstSharedPtr msg)
 }
 
 } // namespace kistler_driver
+
+#include "rclcpp_components/register_node_macro.hpp"
+RCLCPP_COMPONENTS_REGISTER_NODE(kistler_driver::KistlerDriver)
