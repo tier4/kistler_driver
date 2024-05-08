@@ -9,8 +9,14 @@ ament_auto_add_library(kistler_driver_node SHARED
 )
 
 rclcpp_components_register_node(kistler_driver_node
-  PLUGIN "kistler_diver::KistlerDriver"
-  EXECUTABLE kistler_diver)
+  PLUGIN "kistler_driver::KistlerDriver"
+  EXECUTABLE kistler_driver)
+
+install(PROGRAMS
+  scripts/show.py
+  scripts/ui_monitor.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_auto_package(
   INSTALL_TO_SHARE
