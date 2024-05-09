@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         self.diff = 0
         self.error_rate = 0
 
-        self.icon_path = "image/qt_ros_logo.png"
+        self.icon_path = "byd_j6.png"
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowIcon(QIcon(self.icon_path))
@@ -96,7 +96,7 @@ class MainWindow(QMainWindow):
             if self.error_rate >= 3:
                 self.ui.textBrowser_error_data.setTextBackgroundColor(Qt.GlobalColor.red)
                 self.ui.label_error_data_color.setText("誤差率が3%を超えてます")
-                self.ui.label_error_data_color.setFixedWidth(170)
+                self.ui.label_error_data_color.setFixedWidth(240)
                 self.ui.label_error_data_color.setStyleSheet(
                     "color: rgb(255,255,255);"
                     "background-color: rgb(255,0,51);"
@@ -104,7 +104,7 @@ class MainWindow(QMainWindow):
             else:
                 self.ui.textBrowser_error_data.setTextBackgroundColor(Qt.GlobalColor.green)
                 self.ui.label_error_data_color.setText("誤差率が3%以下になってます")
-                self.ui.label_error_data_color.setFixedWidth(200)
+                self.ui.label_error_data_color.setFixedWidth(280)
                 self.ui.label_error_data_color.setStyleSheet(
                     "color: rgb(255,255,255);"
                     "background-color: rgb(18,230,95);"
