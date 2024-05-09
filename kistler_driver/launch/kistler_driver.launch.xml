@@ -25,4 +25,7 @@
     <remap from="output/ea_status" to="kistler/ea_status"/>
     <remap from="output/eb_status" to="kistler/eb_status"/>
   </node>
+
+  <executable cmd="python3 $(find-pkg-share kistler_driver)/scripts/show.py"/>
+
 </launch>
