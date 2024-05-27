@@ -22,7 +22,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QTimer
 from ui_monitor import Ui_MainWindow
 from kistler_driver_msgs.msg import E0Status
-from j6_interface_msgs.msg import M0Status
+# from j6_interface_msgs.msg import M0Status
+from pix_robobus_driver_msgs.msg import WheelSpeedReport
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -50,7 +51,9 @@ class MainWindow(QMainWindow):
         rclpy.init(args=None)
         self.node = Node('Qt_view_node')
         self.sub_kistler_velocity = self.node.create_subscription(E0Status, '/kistler/e0_status', self.on_kistler_velocity, 10)
-        self.sub_vehicle_velocity = self.node.create_subscription(M0Status, '/can/status/m0_status', self.on_vehicle_velocity, 10)
+        # self.sub_vehicle_velocity = self.node.create_subscription(M0Status, '/can/status/m0_status', self.on_vehicle_velocity, 10)
+        self.sub_vehicle_velocity = self.node.create_subscription(WheelSpeedReport, '/pix_robobus/wheel_speed_report', self.on_vehicle_velocity, 10)
+
         rclpy.spin_once(self.node)
 
     def __del__(self):
@@ -82,9 +85,10 @@ class MainWindow(QMainWindow):
         self.update_label()
 
     def on_vehicle_velocity(self, msg):
-        self.front_left_wheel_speed = msg.front_left_wheel_speed
-        self.front_right_wheel_speed = msg.front_right_wheel_speed
-        self.vehicle_velocity = (self.front_left_wheel_speed + self.front_right_wheel_speed) / 2
+        # self.front_left_wheel_speed = msg.front_left_wheel_speed
+        # self.front_right_wheel_speed = msg.front_right_wheel_speed
+        # self.vehicle_velocity = (self.front_left_wheel_speed + self.front_right_wheel_speed) / 2
+        self.vehicle_velocity = (msg.wheel_speed_fr + msg.wheel_speed_fl) / 2 * 3.6
         self.update_label()
 
     def calcError(self):
