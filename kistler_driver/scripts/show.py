@@ -88,11 +88,11 @@ class MainWindow(QMainWindow):
         self.update_label()
 
     def calcError(self):
-        if self.vehicle_velocity == 0:
-            return 0
+        if self.kistler_velocity == 0:
+            pass
         else:
             self.diff = self.vehicle_velocity - self.kistler_velocity
-            self.error_rate = abs(self.diff) / self.kistler_velocity * 100
+            self.error_rate = abs(self.diff / self.kistler_velocity) * 100
             if self.error_rate >= 3:
                 self.ui.textBrowser_error_data.setTextBackgroundColor(Qt.GlobalColor.red)
                 self.ui.label_error_data_color.setText("誤差率が3%を超えてます")
