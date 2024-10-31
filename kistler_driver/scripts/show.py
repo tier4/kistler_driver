@@ -67,7 +67,6 @@ class MainWindow(QMainWindow):
         self.update_label()
         self.calcError()
         self.show()
-        self.timer.start(10)
 
     def update_label(self):
         self.ui.textBrowser_kistler_data.setText(str("{:.2f}".format(self.kistler_velocity)))
