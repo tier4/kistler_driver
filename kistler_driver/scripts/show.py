@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import sys
 import rclpy
 import webbrowser
@@ -34,7 +35,7 @@ class MainWindow(QMainWindow):
         self.diff = 0
         self.error_rate = 0
 
-        self.icon_path = "byd_j6.png"
+        self.icon_path = os.path.join(os.path.dirname(__file__), 'byd_j6.png')
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowIcon(QIcon(self.icon_path))
@@ -122,7 +123,7 @@ class MainWindow(QMainWindow):
                 self.ui.label_error_data_color.setFixedWidth(240)
                 self.ui.label_error_data_color.setStyleSheet(
                     "color: rgb(255,255,255);"
-                    "background-color: rgb(255,0,51);"
+                    "background-color: rgb(255,0,0);"
                     "border-radius:5px;")
             else:
                 self.ui.textBrowser_error_data.setStyleSheet("background-color: rgb(0,255,0); color: white;")
@@ -130,7 +131,7 @@ class MainWindow(QMainWindow):
                 self.ui.label_error_data_color.setFixedWidth(280)
                 self.ui.label_error_data_color.setStyleSheet(
                     "color: rgb(255,255,255);"
-                    "background-color: rgb(18,230,95);"
+                    "background-color: rgb(0,255,0);"
                     "border-radius:5px;")
 
     ### QMenu
