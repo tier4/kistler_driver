@@ -40,6 +40,8 @@ class MainWindow(QMainWindow):
         self.create_menubars()
         self.create_timer()
         self.show()
+        self.ui.vehicle_model.setItemData(0, 0, Qt.UserRole - 1)
+        self.ui.vehicle_model.currentIndexChanged.connect(self.on_vehicle_model_changed)
 
         self.ui.textBrowser_kistler_data.setText(str(self.timer_update))
         self.ui.textBrowser_vehicle_data.setText(str(self.timer_update))
@@ -53,6 +55,19 @@ class MainWindow(QMainWindow):
         self.sub_vehicle_velocity = self.node.create_subscription(M0Status, '/can/status/m0_status', self.on_vehicle_velocity, 10)
         rclpy.spin_once(self.node)
 
+    def on_vehicle_model_changed(self):
+        selected_model = self.ui.vehicle_model.currentText()
+        self.ui.show_vehicle_model.setText(f"Selected Vehicle Model: {selected_model}")
+
+        if selected_model == "BYD J6 Gen1":
+            print("Selected: BYD J6 Gen1")
+        elif selected_model == "BYD J6 Gen2":
+            print("Selected: BYD J6 Gen2")
+        elif selected_model == "PIX RoboBus":
+            print("Selected: PIX RoboBus")
+        else:
+            print("Select a vehicle model, please.")
+    
     def __del__(self):
         self.node.destroy_node()
 
@@ -132,7 +147,7 @@ class MainWindow(QMainWindow):
         return preferMenu
 
     def exit_action(self):
-       # Exit Action, connect
+        # Exit Action, connect
         exitAction = QAction(self.style().standardIcon(QStyle.SP_DialogCancelButton),'&Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
