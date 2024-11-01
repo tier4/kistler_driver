@@ -22,7 +22,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QTimer
 from ui_monitor import Ui_MainWindow
 from kistler_driver_msgs.msg import E0Status
-from j6_interface_msgs.msg import M0Status
+
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -52,22 +52,26 @@ class MainWindow(QMainWindow):
         rclpy.init(args=None)
         self.node = Node('Qt_view_node')
         self.sub_kistler_velocity = self.node.create_subscription(E0Status, '/kistler/e0_status', self.on_kistler_velocity, 10)
-        self.sub_vehicle_velocity = self.node.create_subscription(M0Status, '/can/status/m0_status', self.on_vehicle_velocity, 10)
         rclpy.spin_once(self.node)
 
     def on_vehicle_model_changed(self):
         selected_model = self.ui.vehicle_model.currentText()
         self.ui.show_vehicle_model.setText(f"Selected Vehicle Model: {selected_model}")
 
-        if selected_model == "BYD J6 Gen1":
-            print("Selected: BYD J6 Gen1")
-        elif selected_model == "BYD J6 Gen2":
-            print("Selected: BYD J6 Gen2")
-        elif selected_model == "PIX RoboBus":
-            print("Selected: PIX RoboBus")
-        else:
-            print("Select a vehicle model, please.")
-    
+        if selected_model != "- - - - Select Vehicle Model - - - -":
+            if selected_model == "BYD J6 Gen1":
+                from j6_interface_msgs.msg import M0Status
+                self.sub_vehicle_velocity = self.node.create_subscription(M0Status, '/j6/can/status/m0_status', self.on_vehicle_velocity_j6, 10)
+            elif selected_model == "BYD J6 Gen2":
+                from j6_interface_msgs.msg import M0Status
+                self.sub_vehicle_velocity = self.node.create_subscription(M0Status, '/j6/can/status/m0_status', self.on_vehicle_velocity_j6, 10)
+            elif selected_model == "PIX RoboBus":
+                from pix_robobus_driver_msgs.msg import WheelSpeedReport
+                self.sub_vehicle_velocity = self.node.create_subscription(WheelSpeedReport, '/pix_robobus/wheel_speed_report', self.on_vehicle_velocity_pix, 10)
+            else:
+                print("Select a valid vehicle model, please.")
+            self.ui.vehicle_model.setDisabled(True)
+
     def __del__(self):
         self.node.destroy_node()
 
@@ -95,10 +99,14 @@ class MainWindow(QMainWindow):
         self.kistler_velocity = msg.velocity_x
         self.update_label()
 
-    def on_vehicle_velocity(self, msg):
+    def on_vehicle_velocity_j6(self, msg):
         self.front_left_wheel_speed = msg.front_left_wheel_speed
         self.front_right_wheel_speed = msg.front_right_wheel_speed
         self.vehicle_velocity = (self.front_left_wheel_speed + self.front_right_wheel_speed) / 2
+        self.update_label()
+
+    def on_vehicle_velocity_pix(self, msg):
+        self.vehicle_velocity = (msg.wheel_speed_fr + msg.wheel_speed_fl + msg.wheel_speed_rr + msg.wheel_speed_rl) / 4 * 3.6
         self.update_label()
 
     def calcError(self):
