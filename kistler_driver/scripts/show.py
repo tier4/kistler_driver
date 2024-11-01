@@ -16,6 +16,7 @@
 
 import sys
 import rclpy
+import webbrowser
 from rclpy.node import Node
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMenu, QAction, QStyle, qApp
 from PyQt5.QtGui import QIcon
@@ -116,7 +117,7 @@ class MainWindow(QMainWindow):
             self.diff = self.vehicle_velocity - self.kistler_velocity
             self.error_rate = abs(self.diff / self.kistler_velocity) * 100
             if self.error_rate >= 3:
-                self.ui.textBrowser_error_data.setTextBackgroundColor(Qt.GlobalColor.red)
+                self.ui.textBrowser_error_data.setStyleSheet("background-color: rgb(255,0,0); color: white;")
                 self.ui.label_error_data_color.setText("誤差率が3%を超えてます")
                 self.ui.label_error_data_color.setFixedWidth(240)
                 self.ui.label_error_data_color.setStyleSheet(
@@ -124,7 +125,7 @@ class MainWindow(QMainWindow):
                     "background-color: rgb(255,0,51);"
                     "border-radius:5px;")
             else:
-                self.ui.textBrowser_error_data.setTextBackgroundColor(Qt.GlobalColor.green)
+                self.ui.textBrowser_error_data.setStyleSheet("background-color: rgb(0,255,0); color: white;")
                 self.ui.label_error_data_color.setText("誤差率が3%以下になってます")
                 self.ui.label_error_data_color.setFixedWidth(280)
                 self.ui.label_error_data_color.setStyleSheet(
@@ -142,16 +143,20 @@ class MainWindow(QMainWindow):
 
         menuBar.addMenu(fileMenu)
         # Creating menus using a title
-        editMenu = menuBar.addMenu("&Edit")
-        editMenu.addMenu("Undo")
+        # editMenu = menuBar.addMenu("&Edit")
+        # editMenu.addMenu("TODO")
+
         helpMenu = menuBar.addMenu("&Help")
-        helpMenu.addMenu("Get Started")
+        helpAction1 = QAction("User Guide", self)
+        helpAction1.triggered.connect(lambda: self.open_help_link("https://tier4.atlassian.net/wiki/spaces/KB4FAE/pages/3097592313"))
+        helpMenu.addAction(helpAction1)
+
+        helpAction2 = QAction("Readme", self)
+        helpAction2.triggered.connect(lambda: self.open_help_link("https://github.com/tier4/kistler_driver/blob/main/README.md"))
+        helpMenu.addAction(helpAction2)
 
     def prefer_action(self):
         preferMenu = QMenu('Preferences', self)
-        preferAct = QAction(QIcon('image/setting.jpg'),'Setting', self)
-        preferMenu.addAction(preferAct)
-
         return preferMenu
 
     def exit_action(self):
@@ -162,6 +167,9 @@ class MainWindow(QMainWindow):
         exitAction.triggered.connect(qApp.quit)
         self.statusBar()
         return exitAction
+
+    def open_help_link(self, url):
+        webbrowser.open(url)
 
 
 if __name__=="__main__":
