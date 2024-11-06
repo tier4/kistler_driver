@@ -104,7 +104,7 @@ class MainWindow(QMainWindow):
     def on_vehicle_velocity_j6(self, msg):
         self.front_left_wheel_speed = msg.front_left_wheel_speed
         self.front_right_wheel_speed = msg.front_right_wheel_speed
-        self.vehicle_velocity = (self.front_left_wheel_speed + self.front_right_wheel_speed) / 2
+        self.vehicle_velocity = (self.front_left_wheel_speed + self.front_right_wheel_speed) / 2 * 3.6
         self.update_label()
 
     def on_vehicle_velocity_pix(self, msg):
