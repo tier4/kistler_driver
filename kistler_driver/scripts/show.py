@@ -18,6 +18,8 @@ import os
 import sys
 import rclpy
 import webbrowser
+import time
+import pyqtgraph as pg
 from rclpy.node import Node
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMenu, QAction, QStyle, qApp
 from PyQt5.QtGui import QIcon
@@ -29,12 +31,15 @@ from kistler_driver_msgs.msg import E0Status
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
-        self.setFixedSize(480,590)
-
+        self.setFixedSize(1000,550)
+        self.time_data = []
+        self.kistler_data = []
+        self.vehicle_data = []
         self.kistler_velocity = 0
         self.vehicle_velocity = 0
         self.diff = 0
         self.error_rate = 0
+        self.buffer_size = 200
 
         self.icon_path = os.path.join(os.path.dirname(__file__), 'byd_j6.png')
         self.ui = Ui_MainWindow()
@@ -45,6 +50,14 @@ class MainWindow(QMainWindow):
         self.show()
         self.ui.vehicle_model.setItemData(0, 0, Qt.UserRole - 1)
         self.ui.vehicle_model.currentIndexChanged.connect(self.on_vehicle_model_changed)
+        # self.ui.centralwidget.setStyleSheet("background-color: #f0f0f0;")
+        self.ui.graphicsView.setBackground('#f0f0f0')
+        # self.ui.graphicsView.showGrid(x=True, y=True)
+        self.ui.graphicsView.setTitle("Plot Velocity Data", size="16pt")
+        self.ui.graphicsView.addLegend()
+        self.kistler_curve = self.ui.graphicsView.plot(name="Kistler Velocity", pen=pg.mkPen('r', width=2))
+        self.vehicle_curve = self.ui.graphicsView.plot(name="Vehicle Velocity", pen=pg.mkPen('b', width=2))
+
 
         # ROS2 init
         rclpy.init(args=None)
@@ -74,7 +87,7 @@ class MainWindow(QMainWindow):
         self.node.destroy_node()
 
     def create_timer(self):
-        # create timer
+        self.start_time = time.time()
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.timer_update)
         self.timer.start(10)
@@ -82,8 +95,21 @@ class MainWindow(QMainWindow):
     def timer_update(self):
         rclpy.spin_once(self.node)
         self.update_label()
+        self.plot_velocity()
         self.calcError()
         self.show()
+
+    def plot_velocity(self):
+        t = time.time() - self.start_time
+        self.time_data.append(t)
+        self.kistler_data.append(self.kistler_velocity)
+        self.vehicle_data.append(self.vehicle_velocity)
+        if len(self.time_data) > self.buffer_size:
+            self.time_data = self.time_data[-self.buffer_size:]
+            self.kistler_data = self.kistler_data[-self.buffer_size:]
+            self.vehicle_data = self.vehicle_data[-self.buffer_size:]
+        self.kistler_curve.setData(self.time_data, self.kistler_data)
+        self.vehicle_curve.setData(self.time_data, self.vehicle_data)
 
     def update_label(self):
         self.ui.lcdNumber_kistler_velocity.display(str("{:.2f}".format(self.kistler_velocity)))
@@ -91,6 +117,7 @@ class MainWindow(QMainWindow):
         self.ui.lcdNumber_diff_velocity.display(str("{:.2f}".format(self.diff)))
         self.ui.lcdNumber_error_rate.display(str("{:.2f}".format(self.error_rate)))
         self.show()
+
 
     ### ROS2 Data Updater
     def on_kistler_velocity(self, msg):
