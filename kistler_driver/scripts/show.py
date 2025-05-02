@@ -29,6 +29,7 @@ from kistler_driver_msgs.msg import E0Status
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+        self.setFixedSize(480,590)
 
         self.kistler_velocity = 0
         self.vehicle_velocity = 0
@@ -44,11 +45,6 @@ class MainWindow(QMainWindow):
         self.show()
         self.ui.vehicle_model.setItemData(0, 0, Qt.UserRole - 1)
         self.ui.vehicle_model.currentIndexChanged.connect(self.on_vehicle_model_changed)
-
-        self.ui.textBrowser_kistler_data.setText(str(self.timer_update))
-        self.ui.textBrowser_vehicle_data.setText(str(self.timer_update))
-        self.ui.textBrowser_diff_data.setText(str(self.timer_update))
-        self.ui.textBrowser_error_data.setText(str(self.timer_update))
 
         # ROS2 init
         rclpy.init(args=None)
@@ -90,10 +86,10 @@ class MainWindow(QMainWindow):
         self.show()
 
     def update_label(self):
-        self.ui.textBrowser_kistler_data.setText(str("{:.2f}".format(self.kistler_velocity)))
-        self.ui.textBrowser_vehicle_data.setText(str("{:.2f}".format(self.vehicle_velocity)))
-        self.ui.textBrowser_diff_data.setText(str("{:.2f}".format(self.diff)))
-        self.ui.textBrowser_error_data.setText(str("{:.2f}".format(self.error_rate)))
+        self.ui.lcdNumber_kistler_velocity.display(str("{:.2f}".format(self.kistler_velocity)))
+        self.ui.lcdNumber_vehicle_velocity.display(str("{:.2f}".format(self.vehicle_velocity)))
+        self.ui.lcdNumber_diff_velocity.display(str("{:.2f}".format(self.diff)))
+        self.ui.lcdNumber_error_rate.display(str("{:.2f}".format(self.error_rate)))
         self.show()
 
     ### ROS2 Data Updater
@@ -118,16 +114,16 @@ class MainWindow(QMainWindow):
             self.diff = self.vehicle_velocity - self.kistler_velocity
             self.error_rate = abs(self.diff / self.kistler_velocity) * 100
             if self.error_rate >= 3:
-                self.ui.textBrowser_error_data.setStyleSheet("background-color: rgb(255,0,0); color: white;")
-                self.ui.label_error_data_color.setText("誤差率が3%を超えてます")
+                self.ui.lcdNumber_error_rate.setStyleSheet("background-color: rgb(255,0,0); color: white;")
+                self.ui.label_error_data_color.setText("誤差率が3%を超えている")
                 self.ui.label_error_data_color.setFixedWidth(240)
                 self.ui.label_error_data_color.setStyleSheet(
                     "color: rgb(255,255,255);"
                     "background-color: rgb(255,0,0);"
                     "border-radius:5px;")
             else:
-                self.ui.textBrowser_error_data.setStyleSheet("background-color: rgb(0,255,0); color: white;")
-                self.ui.label_error_data_color.setText("誤差率が3%以下になってます")
+                self.ui.lcdNumber_error_rate.setStyleSheet("background-color: rgb(0,255,0); color: white;")
+                self.ui.label_error_data_color.setText("誤差率が3%以下になっている")
                 self.ui.label_error_data_color.setFixedWidth(280)
                 self.ui.label_error_data_color.setStyleSheet(
                     "color: rgb(255,255,255);"
