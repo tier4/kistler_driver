@@ -79,6 +79,9 @@ class MainWindow(QMainWindow):
             elif selected_model == "PIX RoboBus":
                 from pix_robobus_driver_msgs.msg import WheelSpeedReport
                 self.sub_vehicle_velocity = self.node.create_subscription(WheelSpeedReport, '/pix_robobus/wheel_speed_report', self.on_vehicle_velocity_pix, 10)
+            elif selected_model == "PIX RoboBus Gen2":
+                from robobus_gen2_driver_msgs.msg import VaDriveStaFb
+                self.sub_vehicle_velocity = self.node.create_subscription(VaDriveStaFb, '/pix_robobus/va_drive_sta_fb', self.on_vehicle_velocity_pix_gen2, 10)
             else:
                 print("Select a valid vehicle model, please.")
             self.ui.vehicle_model.setDisabled(True)
@@ -132,6 +135,10 @@ class MainWindow(QMainWindow):
 
     def on_vehicle_velocity_pix(self, msg):
         self.vehicle_velocity = (msg.wheel_speed_fr + msg.wheel_speed_fl + msg.wheel_speed_rr + msg.wheel_speed_rl) / 4 * 3.6
+        self.update_label()
+
+    def on_vehicle_velocity_pix_gen2(self, msg):
+        self.vehicle_velocity = msg.vcu_chassis_speed_fb * 3.6
         self.update_label()
 
     def calcError(self):
