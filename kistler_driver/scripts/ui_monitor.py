@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from pyqtgraph import PlotWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -114,4 +114,3 @@ class Ui_MainWindow(object):
         self.vehicle_model.setItemText(1, _translate("MainWindow", "BYD J6 Gen1"))
         self.vehicle_model.setItemText(2, _translate("MainWindow", "BYD J6 Gen2"))
         self.vehicle_model.setItemText(3, _translate("MainWindow", "PIX RoboBus"))
-from pyqtgraph import PlotWidget

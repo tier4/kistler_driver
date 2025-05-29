@@ -4,6 +4,12 @@ This is ROS Driver for Non-contact optical sensors Correvit S-Motion DTI, standa
 
 Kistler official page of 2055A(https://www.kistler.com/JP/ja/cp/non-contact-optical-sensors-correvit-s-motion-dti-2055a/P0001154)
 
+# Requirements
+
+A GUI tool is provided with this driver to compare vehicle speed and Kistler measurements. It depends on pyqtgraph, which should be installed prior to use.
+
+`pip install pyqtgraph`
+
 # CAN Communication Specification
 
 ![光学車速計CAN Sheet](./doc/KISTLER_S-Motion_CAN_Sheet.png)
